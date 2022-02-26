@@ -9,13 +9,12 @@ Original source of sample code from:
 https://github.com/kaya320/LearningSQL_Alan_Beaulieu/blob/master/LearningSQL%20Example.sql
 (may vary from the original supplied with the book - unverified)
 
-
-Modified to remove enum constraints in tables as not supported.
-Date format changed to suit Postgres style.  Original example using strings has been changed to various configuration dates using the following to replace the string 'yyyy-mm-dd'
-
-    (now() - interval '48 DAY')::date AS 
-
-the number of days randomly chaged to enable different dates in the tables.
+Changes:
+ - Modified to remove enum constraints in tables as not supported. Replaced with char().
+ - Replaced smallint unsigned ... auto-increment with SERIAL.
+ - Date format changed to suit Postgres style.  Original example using strings has been changed to various configuration dates using the following to replace the string 'yyyy-mm-dd'
+        (now() - interval '48 DAY')::date AS 
+   days set with random intervals to provide different dates in the tables.
 
 */
 
@@ -429,8 +428,9 @@ insert into individual (cust_id, fname, lname, birth_date)
 select cust_id, 'Richard', 'Farley', '1968-06-16' from customer
 where fed_id = '999-99-9999';
 
-/*////////////////////////////
-/* corporate customer data */
+/*
+ corporate customer data 
+*/
 
 
 insert into customer (fed_id, cust_type_cd,
@@ -479,8 +479,10 @@ from customer
 where fed_id = '04-4444444';
 
 
-/*////////////////////////////
-/* residential accou
+/*
+  residential accounts
+*/
+
 insert into account (product_cd, cust_id, open_date,
   last_activity_date, status, open_branch_id,
   open_emp_id, avail_balance, pending_balance)
@@ -628,9 +630,9 @@ from customer c cross join
 where c.fed_id = '999-99-9999';
 
 
-/*////////////////////////////
+/*
  corporate account data 
-//////////////////////////*/
+*/
 
 
 insert into account (product_cd, cust_id, open_date,
