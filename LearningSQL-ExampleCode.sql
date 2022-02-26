@@ -10,8 +10,9 @@ https://github.com/kaya320/LearningSQL_Alan_Beaulieu/blob/master/LearningSQL%20E
 (may vary from the original supplied with the book - unverified)
 
 Changes:
- - Modified to remove enum constraints in tables as not supported. Replaced with char().
- - Replaced smallint unsigned ... auto-increment with SERIAL.
+ - Modified to remove enum constraints in tables as not supported. Replaced with CHAR().
+ - id: smallint unsigned '...' auto-increment not supported. Replaced with SERIAL.
+ - Float and double values not supported, replaced with REAL
  - Date format changed to suit Postgres style.  Original example using strings has been changed to various configuration dates using the following to replace the string 'yyyy-mm-dd'
         (now() - interval '48 DAY')::date AS 
    days set with random intervals to provide different dates in the tables.
@@ -73,12 +74,6 @@ create table product
   constraint pk_product primary key (product_cd)
  );
 
-
-
-
-
-
-
 create table customer
  (cust_id SERIAL not null,
   fed_id varchar(12) not null,
@@ -123,12 +118,6 @@ create table officer
   constraint pk_officer primary key (officer_id)
  );
 
-
-/*  Change here as float is not supported in postgres. Selected to go with 'real' - see docs.
-Also removed the enum and replaced with varchar(10).
-*/ 
-
-
 create table account
  (account_id SERIAL not null,
   product_cd varchar(10) not null,
@@ -152,9 +141,6 @@ create table account
   constraint pk_account primary key (account_id)
  );
 
-
-/*changed the enum to char(3) and the double to real */
-
 create table transaction
  (txn_id SERIAL not null,
   txn_date date not null,
@@ -177,10 +163,12 @@ create table transaction
 
 
 
-
 /* begin data population */
 
+
+
 /* department data */
+
 insert into department (name)
 values ('Operations');
 insert into department (name)
@@ -373,6 +361,7 @@ insert into product (product_cd, name, product_type_cd, date_offered)
 values ('SBL','small business loan','LOAN','2000-01-01');
 
 /* residential customer data */
+
 insert into customer (fed_id, cust_type_cd,
   address, city, state, postal_code)
 values ('111-11-1111', 'I', '47 Mockingbird Ln', 'Lynnfield', 'MA', '01940');
@@ -428,10 +417,7 @@ insert into individual (cust_id, fname, lname, birth_date)
 select cust_id, 'Richard', 'Farley', '1968-06-16' from customer
 where fed_id = '999-99-9999';
 
-/*
- corporate customer data 
-*/
-
+/* corporate customer data */
 
 insert into customer (fed_id, cust_type_cd,
   address, city, state, postal_code)
@@ -478,10 +464,7 @@ select cust_id, 'Stanley', 'Cheswick', 'President', '1999-05-01'
 from customer
 where fed_id = '04-4444444';
 
-
-/*
-  residential accounts
-*/
+/* residential accounts */
 
 insert into account (product_cd, cust_id, open_date,
   last_activity_date, status, open_branch_id,
@@ -629,11 +612,7 @@ from customer c cross join
     1500.00 avail, 1500.00 pend) a
 where c.fed_id = '999-99-9999';
 
-
-/*
- corporate account data 
-*/
-
+/* corporate account data */
 
 insert into account (product_cd, cust_id, open_date,
   last_activity_date, status, open_branch_id,
@@ -699,3 +678,5 @@ insert into transaction (txn_date, account_id, txn_type_cd,
 select a.open_date, a.account_id, 'CDT', 100, a.open_date
 from account a
 where a.product_cd IN ('CHK','SAV','CD','MM');
+
+/* end*/
